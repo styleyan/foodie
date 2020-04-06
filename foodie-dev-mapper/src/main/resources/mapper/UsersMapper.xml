@@ -10,4 +10,8 @@
           <include refid="field"/>
         from users;
     </select>
+
+    <select id="userNameIsExist" parameterType="String" resultType="int">
+        SELECT count(*) from users WHERE username = #{userName};
+    </select>
 </mapper>

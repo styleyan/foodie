@@ -18,4 +18,11 @@ public class UsersServiceImpl implements UsersService {
     public List<Users> queryAll() {
         return usersMapper.queryAll();
     }
+
+    @Override
+    public boolean userNameIsExist(String userName) {
+        int count = usersMapper.userNameIsExist(userName);
+        boolean result = count == 0 ? false : true;
+        return result;
+    }
 }

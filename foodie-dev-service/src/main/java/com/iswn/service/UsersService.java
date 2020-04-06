@@ -9,4 +9,9 @@ public interface UsersService {
      * 判断用户名是否存在
      */
     List<Users> queryAll();
+
+    /**
+     * 查询用户名是否存在
+     */
+    boolean userNameIsExist(String userName);
 }
