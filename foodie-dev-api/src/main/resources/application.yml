@@ -1,0 +1,56 @@
+############################################################
+#
+# web访问端口号 约定：8088
+#
+############################################################
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+  maxx-http-header-size: 80KB
+
+############################################################
+#
+# 配置数据源信息
+#
+############################################################
+spring:
+  datasource: # 数据源的相关配置
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://xxxx.xxx.xxx.xxx:3306/foodie-shop?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+      username: root
+      password: xxxxxxxx
+      # 配置初始化大小/最小/最大[仅用于测试，生成环境需要修改哦]
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      # 获取连接等待超时时间
+      max-wait: 60000
+      # 一个连接在池中最小生存的时间
+      time-between-eviction-runs-millis: 300000
+      # 指定获取连接时连接校验的sql查询语句
+      # validation-query: SELECT 'x'
+      # 验证连接的有效性
+      test-while-idle: true
+      # 获取链接时验证，会影响性能(不建议 true)
+      test-on-borrow: false
+      # 打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+
+
+  jackson:
+    serialization:
+      fail_on_empty_beans: false
+#
+# mybatis 配置
+#
+############################################################
+mybatis:
+  config-location: classpath:mybatis-config.xml # mybatis 配置文件
+  tyape-aliases-packge: com.iswn.pojo # 所有POJO类所在包路径
+  mapper-locations: classpath*:mapper/*.xml # mapper映射文件
+
+
