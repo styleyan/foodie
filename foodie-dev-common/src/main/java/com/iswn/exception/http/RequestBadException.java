@@ -1,6 +1,6 @@
 package com.iswn.exception.http;
 
-import com.iswn.utils.ErrorCodeEnum;
+import com.iswn.enums.ErrorCodeEnum;
 
 /**
  * 请求参数异常

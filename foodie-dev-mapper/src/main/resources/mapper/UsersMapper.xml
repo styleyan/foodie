@@ -14,4 +14,9 @@
     <select id="userNameIsExist" parameterType="String" resultType="int">
         SELECT count(*) from users WHERE username = #{userName};
     </select>
+
+    <insert id="insertUser" parameterType="com.iswn.pojo.Users">
+        INSERT INTO users(`id`, username, password, nickname, face, sex, created_time, updated_time, birthday)
+        VALUES (#{id}, #{username}, #{password}, #{nickname}, #{face}, #{sex}, #{createdTime}, #{updatedTime}, #{birthday})
+    </insert>
 </mapper>

@@ -1,4 +1,4 @@
-package com.iswn.utils;
+package com.iswn.enums;
 
 import lombok.Getter;
 

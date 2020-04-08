@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.iswn.mapper")
+@MapperScan(basePackages = {"com.iswn.mapper", "org.n3r.idworker"})
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
