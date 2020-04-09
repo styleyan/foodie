@@ -24,8 +24,29 @@ public class HelloController {
         return result ? JsonResult.success() : JsonResult.failure(233, "用户名存在");
     }
 
-    @PostMapping("/api/userCreate")
-    public JsonResult userCreate(@RequestBody UserBO userBO) {
+    @PostMapping("/api/regist")
+    public JsonResult regist(@RequestBody UserBO userBO) {
+        String pwd = userBO.getPassword();
+        String username = userBO.getUsername();
+        String confirmPwd = userBO.getConfirmPassword();
+
+        if (StringUtils.isAnyBlank(pwd, username, confirmPwd)) {
+            throw new RequestBadException("用户名或密码不能为空");
+        }
+
+        if (pwd.length() < 6) {
+            throw new RequestBadException("密码长度不能小于");
+        }
+
+        if (!pwd.equals(confirmPwd)) {
+            throw new RequestBadException("2次密码不一致");
+        }
+
+        boolean isExist = usersService.userNameIsExist(username);
+        if (isExist) {
+            return JsonResult.failure(3000, "用户已存在");
+        }
+
         usersService.createUser(userBO);
 
         return JsonResult.success();
