@@ -8,8 +8,8 @@ import lombok.Getter;
  */
 @Getter
 public enum ErrorCodeEnum {
-    BAD_REQUEST(2003, "参数错误");
-
+    BAD_REQUEST(2003, "参数错误"),
+    BAD_LOGIN(2004, "登录异常");
     private int code;
     private String message;
 

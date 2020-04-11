@@ -19,4 +19,10 @@
         INSERT INTO users(`id`, username, password, nickname, face, sex, created_time, updated_time, birthday)
         VALUES (#{id}, #{username}, #{password}, #{nickname}, #{face}, #{sex}, #{createdTime}, #{updatedTime}, #{birthday})
     </insert>
+
+    <select id="queryUserByLogin" parameterType="com.iswn.bo.UserBO" resultType="com.iswn.pojo.Users">
+        SELECT
+         <include refid="field"/>
+         FROM users WHERE username = #{username} and password = #{password}
+    </select>
 </mapper>

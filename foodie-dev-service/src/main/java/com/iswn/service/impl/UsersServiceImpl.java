@@ -2,6 +2,7 @@ package com.iswn.service.impl;
 
 import com.iswn.bo.UserBO;
 import com.iswn.enums.SexEnum;
+import com.iswn.exception.http.LoginBadException;
 import com.iswn.mapper.UsersMapper;
 import com.iswn.pojo.Users;
 import com.iswn.service.UsersService;
@@ -10,6 +11,7 @@ import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
 
 @Service
@@ -56,5 +58,18 @@ public class UsersServiceImpl implements UsersService {
 
         usersMapper.insertUser(user);
         return null;
+    }
+
+    @Override
+    public Users queryUserForLogin(UserBO userBO) throws Exception {
+        String md5Str = MD5Utils.getMD5Str(userBO.getPassword());
+        userBO.setPassword(md5Str);
+
+        // 查询
+        Users users = usersMapper.queryUserByLogin(userBO);
+        if (users == null) {
+            throw new LoginBadException("用户名或密码不正确");
+        }
+        return users;
     }
 }

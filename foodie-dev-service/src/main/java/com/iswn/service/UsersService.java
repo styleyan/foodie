@@ -13,5 +13,10 @@ public interface UsersService {
     /**
      * 创建用户
      */
-    public Users createUser(UserBO userBO);
+    Users createUser(UserBO userBO);
+
+    /**
+     * 检索用户名和密码是否匹配，用于登录
+     */
+    Users queryUserForLogin(UserBO userBO) throws Exception;
 }

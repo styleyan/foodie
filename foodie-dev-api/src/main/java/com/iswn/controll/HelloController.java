@@ -1,15 +1,25 @@
 package com.iswn.controll;
 
 import com.iswn.bo.UserBO;
+import com.iswn.exception.http.LoginBadException;
 import com.iswn.exception.http.RequestBadException;
+import com.iswn.pojo.Users;
 import com.iswn.service.UsersService;
+import com.iswn.utils.CookieUtils;
 import com.iswn.utils.JsonResult;
+import com.iswn.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 public class HelloController {
+    final static Logger logger = LoggerFactory.getLogger(HelloController.class);
 
     @Autowired
     private UsersService usersService;
@@ -44,11 +54,32 @@ public class HelloController {
 
         boolean isExist = usersService.userNameIsExist(username);
         if (isExist) {
-            return JsonResult.failure(3000, "用户已存在");
+            throw new RequestBadException("用户已存在");
         }
 
         usersService.createUser(userBO);
 
         return JsonResult.success();
+    }
+
+    /**
+     * 登录
+     * @return
+     */
+    @PostMapping("/api/login")
+    public JsonResult login(@RequestBody UserBO userBO,
+                            HttpServletRequest request,
+                            HttpServletResponse response) throws Exception {
+        if (StringUtils.isAnyBlank(userBO.getUsername(), userBO.getUsername())) {
+            throw new LoginBadException("用户名和密码不能为空");
+        }
+
+        // 1. 实现登录
+        Users users = usersService.queryUserForLogin(userBO);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
+        logger.error("233333");
+        logger.info("erer3322");
+        logger.warn("iirrrr");
+        return JsonResult.success(users);
     }
 }

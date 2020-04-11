@@ -24,4 +24,9 @@ public interface UsersMapper {
      * 保存用户
      */
     Integer insertUser(Users users);
+
+    /**
+     * 通过账号、密码检索用户
+     */
+    Users queryUserByLogin(UserBO userBO);
 }

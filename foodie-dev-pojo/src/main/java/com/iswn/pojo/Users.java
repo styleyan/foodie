@@ -1,5 +1,6 @@
 package com.iswn.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,7 @@ public class Users {
     /**
      * 密码 密码
      */
+    @JsonIgnore
     private String password;
 
     /**
@@ -41,6 +43,7 @@ public class Users {
     /**
      * 手机号 手机号
      */
+    @JsonIgnore
     private String mobile;
 
     /**
