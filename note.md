@@ -21,3 +21,5 @@ public JsonResult login(@RequestBody UserBO userBO, HttpServletRequest request) 
 6. 设置 cookies 工具类
 
 7. sl4j 日志配置打印
+
+8. ibatis 配置打印出 sql 语句? 没配置成功
