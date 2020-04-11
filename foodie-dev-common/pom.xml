@@ -12,6 +12,13 @@
     <!--默认打包方式为 jar-->
     <!--<packaging>jar</packaging>-->
     <artifactId>foodie-dev-common</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.31</version>
+        </dependency>
+    </dependencies>
 
 
 </project>

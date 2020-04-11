@@ -77,9 +77,6 @@ public class HelloController {
         // 1. 实现登录
         Users users = usersService.queryUserForLogin(userBO);
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
-        logger.error("233333");
-        logger.info("erer3322");
-        logger.warn("iirrrr");
         return JsonResult.success(users);
     }
 }
