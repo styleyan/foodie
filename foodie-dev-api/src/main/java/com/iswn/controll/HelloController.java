@@ -79,4 +79,14 @@ public class HelloController {
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
         return JsonResult.success(users);
     }
+
+    /**
+     * 用户退出
+     * @return
+     */
+    @PostMapping("/api/logout")
+    public JsonResult logout(@RequestParam(required = false) String userId, HttpServletRequest request, HttpServletResponse response) {
+        CookieUtils.deleteCookie(request,response, "user");
+        return JsonResult.success();
+    }
 }
