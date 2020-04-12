@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.iswn.mapper.CarouselMapper" >
+    <sql id="field">
+        id, username, password, nickname, realname, face, mobile, email, sex, birthday, created_time, updated_time
+    </sql>
 
+    <select id="selectAll" parameterType="Integer" resultType="com.iswn.pojo.Carousel">
+        SELECT * from carousel where is_show = #{isShow} ORDER BY create_time DESC;
+    </select>
 </mapper>

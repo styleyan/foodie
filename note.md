@@ -23,3 +23,9 @@ public JsonResult login(@RequestBody UserBO userBO, HttpServletRequest request) 
 7. sl4j 日志配置打印
 
 8. ibatis 配置打印出 sql 语句? 没配置成功
+
+9. [关于java的 PO/BO/VO/DTO/POJO/DAO](https://www.cnblogs.com/EasonJim/p/7967949.html)
+
+10. myBatis中的 resultMap 使用 collection 标签定义关联的 list 集合类型的封装规则
+
+11. 在多种分类中，虽然可以分几张表来进行分表，但是有一种更好的方式是 无限递归表，可以把很多中分类集合在一张表上。
