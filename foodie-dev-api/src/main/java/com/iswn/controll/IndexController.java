@@ -58,4 +58,17 @@ public class IndexController {
         }
         return JsonResult.success(categoryService.getSubCatList(rootCatId));
     }
+
+    /**
+     * 查询每个一级分类下的最新6条商品数据
+     * @return
+     */
+    @GetMapping("/sixNewItems/{rootCatId}")
+    public JsonResult sixNewItems(@PathVariable("rootCatId") Integer rootCatId) {
+        if (rootCatId == null) {
+            throw new RequestBadException("一级分类id不能为空");
+        }
+
+        return JsonResult.success(categoryService.getSixNewItemsLazy(rootCatId));
+    }
 }

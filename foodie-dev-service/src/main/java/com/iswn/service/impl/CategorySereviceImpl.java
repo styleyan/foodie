@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 分类
@@ -36,5 +38,13 @@ public class CategorySereviceImpl implements CategoryService {
             result = new ArrayList<>();
         }
         return result;
+    }
+
+    @Override
+    public List getSixNewItemsLazy(Integer rootCatId) {
+        Map<String, Object> map = new HashMap<>(8);
+
+        map.put("rootCatId", rootCatId);
+        return categoryMapper.getSixNewItemsLazy(map);
     }
 }
