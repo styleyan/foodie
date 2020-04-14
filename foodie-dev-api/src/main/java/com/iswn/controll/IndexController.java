@@ -5,7 +5,6 @@ import com.iswn.exception.http.RequestBadException;
 import com.iswn.service.CarouselService;
 import com.iswn.service.CategoryService;
 import com.iswn.utils.JsonResult;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
