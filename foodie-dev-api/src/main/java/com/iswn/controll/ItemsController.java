@@ -7,6 +7,7 @@ import com.iswn.pojo.ItemsParam;
 import com.iswn.pojo.ItemsSpec;
 import com.iswn.service.ItemService;
 import com.iswn.utils.JsonResult;
+import com.iswn.utils.PagedGridResult;
 import com.iswn.vo.ItemInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/items")
-public class ItemsController {
+public class ItemsController extends BaseController {
     final static Logger logger = LoggerFactory.getLogger(ItemsController.class);
 
     @Autowired
@@ -59,5 +60,32 @@ public class ItemsController {
         }
 
         return JsonResult.success(itemService.queryCommentCounts(itemId));
+    }
+
+    /**
+     * 查询商品评论
+     * @return
+     */
+    @GetMapping("/comments")
+    public JsonResult comments(
+            @RequestParam String itemId,
+            @RequestParam Integer level,
+            @RequestParam Integer page,
+            @RequestParam(value = "pageSize") Integer pageSize) {
+        if (StringUtils.isBlank(itemId)) {
+            throw new RequestBadException("商品id不能为空");
+        }
+
+        if (page == null) {
+            page = 1;
+        }
+
+        if (pageSize == null) {
+            pageSize = COMMENT_PAGE_SIZE;
+        }
+
+        PagedGridResult grid = itemService.queryPagedComments(itemId, level, page, pageSize);
+
+        return JsonResult.success(grid);
     }
 }

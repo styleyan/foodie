@@ -5,7 +5,9 @@ import com.iswn.pojo.Items;
 import com.iswn.pojo.ItemsImg;
 import com.iswn.pojo.ItemsParam;
 import com.iswn.pojo.ItemsSpec;
+import com.iswn.utils.PagedGridResult;
 import com.iswn.vo.CommentLevelCountsVO;
+import com.iswn.vo.ItemCommentVO;
 
 import java.util.List;
 
@@ -43,4 +45,12 @@ public interface ItemService {
      * @param itemId
      */
     CommentLevelCountsVO queryCommentCounts(String itemId);
+
+    /**
+     * 根据商品id查询商品的评价(分页)
+     * @param itemId
+     * @param level
+     * @return
+     */
+    PagedGridResult queryPagedComments(String itemId, Integer level, Integer page, Integer pageSize);
 }

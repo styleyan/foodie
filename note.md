@@ -29,3 +29,5 @@ public JsonResult login(@RequestBody UserBO userBO, HttpServletRequest request) 
 10. myBatis中的 resultMap 使用 collection 标签定义关联的 list 集合类型的封装规则
 
 11. 在多种分类中，虽然可以分几张表来进行分表，但是有一种更好的方式是 无限递归表，可以把很多中分类集合在一张表上。
+
+12. 原来 java controller 还可以被继承

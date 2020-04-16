@@ -88,6 +88,11 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>LATEST</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.10</version>
+        </dependency>
         <!-- lombok set/get 方法生成 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
