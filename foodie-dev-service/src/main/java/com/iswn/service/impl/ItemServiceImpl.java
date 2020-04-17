@@ -80,27 +80,9 @@ public class ItemServiceImpl implements ItemService {
         map.put("itemId", itemId);
         map.put("level", level);
 
-        // 使用 mybatis-pagehelper
         PageHelper.startPage(page, pageSize);
         List<ItemCommentVO> list = itemsCommentsMapper.queryItemComments(map);
 
-        return setterPagedGrid(list, page);
-    }
-
-    /**
-     * 统一分装设置翻页
-     * @param list
-     * @param page
-     * @return
-     */
-    private PagedGridResult setterPagedGrid(List<?> list, Integer page) {
-        PageInfo<?> pageList = new PageInfo<>(list);
-        PagedGridResult grid = new PagedGridResult();
-        grid.setPage(page);
-        grid.setRows(list);
-        grid.setTotal(pageList.getPages());
-        grid.setRecords(pageList.getTotal());
-
-        return grid;
+        return PagedGridResult.setterPagedGrid(list, page);
     }
 }
