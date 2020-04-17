@@ -32,7 +32,7 @@ public class ItemsController extends BaseController {
     @GetMapping("/info/{itemId}")
     public JsonResult itemInfo(@PathVariable("itemId") String itemId) {
         if (StringUtils.isBlank(itemId)) {
-            new RequestBadException("商品id不能为空");
+            throw new RequestBadException("商品id不能为空");
         }
 
         Items items = itemService.queryItemById(itemId);
@@ -56,7 +56,7 @@ public class ItemsController extends BaseController {
     @GetMapping("/commentLevel")
     public JsonResult commentLevel(@RequestParam("itemId") String itemId) {
         if (StringUtils.isBlank(itemId)) {
-            new RequestBadException("商品参数不能为空");
+            throw new RequestBadException("商品参数不能为空");
         }
 
         return JsonResult.success(itemService.queryCommentCounts(itemId));
