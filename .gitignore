@@ -28,5 +28,5 @@ hs_err_pid*
 
 # 配置文件忽略
 application-local.yml
-log4j.propertiess
+log4j.properties
  
