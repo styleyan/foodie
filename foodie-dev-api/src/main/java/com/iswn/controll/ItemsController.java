@@ -88,4 +88,27 @@ public class ItemsController extends BaseController {
 
         return JsonResult.success(grid);
     }
+
+    @GetMapping("/search")
+    public JsonResult searchItems(
+            @RequestParam("keywords") String keywords,
+            @RequestParam("sort") String sort,
+            @RequestParam("page") Integer page,
+            @RequestParam("pageSize") Integer pageSize
+            ) {
+
+        if (StringUtils.isBlank(keywords)) {
+            throw new RequestBadException("搜索商品不能为空");
+        }
+        if (page == null) {
+            page = 1;
+        }
+
+        if (pageSize == null) {
+            pageSize = PAGE_SIZE;
+        }
+
+        PagedGridResult result = itemService.searchItems(keywords, sort, page, pageSize);
+        return JsonResult.success(result);
+    }
 }

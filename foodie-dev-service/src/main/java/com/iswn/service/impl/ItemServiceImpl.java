@@ -1,7 +1,6 @@
 package com.iswn.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.iswn.enums.CommentLevel;
 import com.iswn.mapper.*;
 import com.iswn.pojo.Items;
@@ -9,13 +8,14 @@ import com.iswn.pojo.ItemsImg;
 import com.iswn.pojo.ItemsParam;
 import com.iswn.pojo.ItemsSpec;
 import com.iswn.service.ItemService;
+import com.iswn.utils.DesensitizationUtil;
 import com.iswn.utils.PagedGridResult;
 import com.iswn.vo.CommentLevelCountsVO;
 import com.iswn.vo.ItemCommentVO;
+import com.iswn.vo.SearchItemsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +82,25 @@ public class ItemServiceImpl implements ItemService {
 
         PageHelper.startPage(page, pageSize);
         List<ItemCommentVO> list = itemsCommentsMapper.queryItemComments(map);
+
+        /**
+         * 进行脱敏
+         */
+        for (ItemCommentVO itemCommentVO : list) {
+            itemCommentVO.setNickname(DesensitizationUtil.commonDisplay(itemCommentVO.getNickname()));
+        }
+
+        return PagedGridResult.setterPagedGrid(list, page);
+    }
+
+    @Override
+    public PagedGridResult searchItems(String keywords, String sort, Integer page, Integer pageSize) {
+        Map paramMap = new HashMap(8);
+        paramMap.put("keywords", keywords);
+        paramMap.put("sort", sort);
+
+        PageHelper.startPage(page, pageSize);
+        List<SearchItemsVO> list = itemsMapper.searchItems(paramMap);
 
         return PagedGridResult.setterPagedGrid(list, page);
     }

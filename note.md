@@ -31,3 +31,9 @@ public JsonResult login(@RequestBody UserBO userBO, HttpServletRequest request) 
 11. 在多种分类中，虽然可以分几张表来进行分表，但是有一种更好的方式是 无限递归表，可以把很多中分类集合在一张表上。
 
 12. 原来 java controller 还可以被继承
+
+13. 需要查看脱敏工具类是怎么实现的?
+
+14. 在绝大多数情况下，只要涉及到金额存储的，数据库设计都会以分为单位存储
+
+15. myBatis 下的 <choose><when></when></choose>语句
