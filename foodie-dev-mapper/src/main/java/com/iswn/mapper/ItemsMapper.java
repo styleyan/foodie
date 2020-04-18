@@ -19,4 +19,11 @@ public interface ItemsMapper {
      * @return
      */
     List<SearchItemsVO> searchItems(@Param("paramsMap") Map<String, Object> hashMap);
+
+    /**
+     * 根据三级id查询商品列表
+     * @param hashMap
+     * @return
+     */
+    List<SearchItemsVO> searchItemsByThirdCat(@Param("paramsMap") Map<String, Object> hashMap);
 }

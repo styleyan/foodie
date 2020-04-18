@@ -111,4 +111,28 @@ public class ItemsController extends BaseController {
         PagedGridResult result = itemService.searchItems(keywords, sort, page, pageSize);
         return JsonResult.success(result);
     }
+
+
+    @GetMapping("/catItems")
+    public JsonResult catItems(
+            @RequestParam("catId") Integer catId,
+            @RequestParam("sort") String sort,
+            @RequestParam("page") Integer page,
+            @RequestParam("pageSize") Integer pageSize
+    ) {
+
+        if (catId == null) {
+            throw new RequestBadException("商品分类不能为空");
+        }
+        if (page == null) {
+            page = 1;
+        }
+
+        if (pageSize == null) {
+            pageSize = PAGE_SIZE;
+        }
+
+        PagedGridResult result = itemService.searchItemsByThirdCat(catId, sort, page, pageSize);
+        return JsonResult.success(result);
+    }
 }
