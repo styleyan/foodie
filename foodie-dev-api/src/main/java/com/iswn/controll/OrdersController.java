@@ -1,0 +1,36 @@
+package com.iswn.controll;
+
+import com.iswn.bo.SubmitOrderBO;
+import com.iswn.enums.PayMethodEnum;
+import com.iswn.exception.http.RequestBadException;
+import com.iswn.utils.JsonResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * 订单相关控制器
+ */
+@RestController
+@RequestMapping("/api/orders")
+public class OrdersController {
+    final static Logger logger = LoggerFactory.getLogger(OrdersController.class);
+
+    /**
+     * 创建订单
+     * @return
+     */
+    @PostMapping("/create")
+    public JsonResult create(@RequestBody SubmitOrderBO submitOrderBO) {
+        logger.info(submitOrderBO.toString());
+        Integer payType = submitOrderBO.getPayMethod();
+        if (payType != PayMethodEnum.ALIPAY.getType() && payType != PayMethodEnum.WEIXIN.getType()) {
+            throw new RequestBadException("支付方式不支持");
+        }
+
+        // 1. 创建订单
+        // 2. 创建订单以后，移除购物车中已结算(已提交)的商品
+        // 3. 向支付中心发送当前订单，用于保存支付中心的订单数据
+        return JsonResult.success();
+    }
+}

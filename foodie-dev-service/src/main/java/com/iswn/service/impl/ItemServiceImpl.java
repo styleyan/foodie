@@ -1,7 +1,7 @@
 package com.iswn.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.iswn.enums.CommentLevel;
+import com.iswn.enums.CommentLevelEnum;
 import com.iswn.mapper.*;
 import com.iswn.pojo.Items;
 import com.iswn.pojo.ItemsImg;
@@ -60,9 +60,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentLevelCountsVO queryCommentCounts(String itemId) {
-        Integer goodCounts = itemsCommentsMapper.queryCommentNum(itemId, CommentLevel.GOOD.getType());
-        Integer normals = itemsCommentsMapper.queryCommentNum(itemId, CommentLevel.NORMAL.getType());
-        Integer bad = itemsCommentsMapper.queryCommentNum(itemId, CommentLevel.NORMAL.getType());
+        Integer goodCounts = itemsCommentsMapper.queryCommentNum(itemId, CommentLevelEnum.GOOD.getType());
+        Integer normals = itemsCommentsMapper.queryCommentNum(itemId, CommentLevelEnum.NORMAL.getType());
+        Integer bad = itemsCommentsMapper.queryCommentNum(itemId, CommentLevelEnum.NORMAL.getType());
 
         CommentLevelCountsVO commentLevelCountsVO = new CommentLevelCountsVO();
 

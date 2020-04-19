@@ -39,4 +39,11 @@ public interface UserAddressMapper {
      * @param userAddress
      */
     void setDefaultAddress(UserAddress userAddress);
+
+    /**
+     * 根据用户和地址相关id 查询收货地址
+     * @param addressBO
+     * @return
+     */
+    UserAddress queryUserAddress(AddressBO addressBO);
 }

@@ -1,6 +1,6 @@
 package com.iswn.controll;
 
-import com.iswn.enums.YesOrNo;
+import com.iswn.enums.YesOrNoEnum;
 import com.iswn.exception.http.RequestBadException;
 import com.iswn.service.CarouselService;
 import com.iswn.service.CategoryService;
@@ -30,7 +30,7 @@ public class IndexController {
     @GetMapping("carousel")
     public JsonResult carousel() {
         logger.info("查询 carouse 结果");
-        return JsonResult.success(carouselService.queryAll(YesOrNo.YES.getType()));
+        return JsonResult.success(carouselService.queryAll(YesOrNoEnum.YES.getType()));
     }
 
     /**

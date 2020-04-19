@@ -53,4 +53,8 @@
         WHERE
           id = #{id} AND user_id = #{userId};
     </update>
+
+    <select id="queryUserAddress" resultType="com.iswn.pojo.UserAddress">
+        SELECT * FROM user_address WHERE id = #{addressId} AND user_id = #{userId};
+    </select>
 </mapper>
