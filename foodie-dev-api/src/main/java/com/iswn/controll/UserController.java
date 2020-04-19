@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-public class HelloController {
-    final static Logger logger = LoggerFactory.getLogger(HelloController.class);
+public class UserController {
+    final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UsersService usersService;
@@ -59,6 +59,9 @@ public class HelloController {
 
         usersService.createUser(userBO);
 
+        // TODO: 生成用户 token，存入 redis 会话
+        // TODO: 同步购物车数据
+
         return JsonResult.success();
     }
 
@@ -77,6 +80,10 @@ public class HelloController {
         // 1. 实现登录
         Users users = usersService.queryUserForLogin(userBO);
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
+
+        // TODO: 生成用户 token，存入 redis 会话
+        // TODO: 同步购物车数据
+
         return JsonResult.success(users);
     }
 

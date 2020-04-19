@@ -2,4 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.iswn.mapper.UserAddressMapper" >
 
+    <select id="queryAddressByUserId" parameterType="String" resultType="com.iswn.pojo.UserAddress">
+      SELECT * FROM user_address WHERE user_id = #{userId}
+    </select>
+
+    <insert id="addUserAddress">
+        INSERT INTO
+            user_address(`id`,`user_id`, `mobile`, `receiver`, `province`, `city`,`district`,`detail`,`extand`,`is_default`, `created_time`,`updated_time`)
+          VALUES
+            (#{id}, #{userId}, #{mobile},#{receiver}, #{province}, #{city}, #{district}, #{detail}, #{extand}, #{isDefault}, #{createdTime}, #{updatedTime});
+    </insert>
+
+    <update id="updateUserAddress">
+        UPDATE user_address
+          <set>
+              <if test="detail != null">
+                `detail` = #{detail},
+              </if>
+              <if test="mobile != null">
+                  `mobile` = #{mobile},
+              </if>
+              <if test="receiver != null">
+                  `receiver` = #{receiver},
+              </if>
+              <if test="province != null">
+                  `province` = #{province},
+              </if>
+              <if test="city != null">
+                  `city` = #{city},
+              </if>
+              <if test="district != null">
+                  `district` = #{district},
+              </if>
+          </set>
+        WHERE
+          id = #{id};
+    </update>
+
+    <delete id="deleteUserAddress">
+        DELETE FROM user_address WHERE id = #{addressId} AND user_id = #{userId};
+    </delete>
+
+    <update id="setDefaultAddress">
+        UPDATE user_address
+          <set>
+              <if test="isDefault != null">
+                  `is_default` = #{isDefault}
+              </if>
+          </set>
+        WHERE
+          id = #{id} AND user_id = #{userId};
+    </update>
 </mapper>
