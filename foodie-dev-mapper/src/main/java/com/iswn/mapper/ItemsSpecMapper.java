@@ -15,4 +15,12 @@ public interface ItemsSpecMapper {
      * @return
      */
     ItemsSpec queryItemSpecById(@Param("specId") String specId);
+
+    /**
+     * 减库存
+     * @param specId
+     * @param pendingCounts
+     * @return
+     */
+    Integer decreaseItemSpecStock(@Param("specId") String specId, @Param("pendingCounts") Integer pendingCounts);
 }

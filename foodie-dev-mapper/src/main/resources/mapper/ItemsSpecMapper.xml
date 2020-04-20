@@ -8,4 +8,15 @@
     <select id="queryItemSpecById" parameterType="String" resultType="com.iswn.pojo.ItemsSpec">
         SELECT * FROM items_spec WHERE id = #{specId};
     </select>
+    <!-- 这里采用乐观锁的方式-->
+    <update id="decreaseItemSpecStock">
+      UPDATE
+        items_spec
+      SET
+        stock = stock - #{pendingCounts}
+      WHERE
+        id = #{specId}
+      AND
+        stock >= #{pendingCounts};
+    </update>
 </mapper>

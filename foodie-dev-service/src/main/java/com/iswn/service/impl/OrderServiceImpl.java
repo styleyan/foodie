@@ -6,6 +6,7 @@ import com.iswn.enums.OrderStatusEnum;
 import com.iswn.enums.YesOrNoEnum;
 import com.iswn.mapper.*;
 import com.iswn.pojo.*;
+import com.iswn.service.ItemsSpecService;
 import com.iswn.service.OrderService;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,28 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private UserAddressMapper userAddressMapper;
+
     @Autowired
     private ItemsSpecMapper itemsSpecMapper;
+
     @Autowired
     private ItemsMapper itemsMapper;
+
     @Autowired
     private ItemsImgMapper itemsImgMapper;
+
     @Autowired
     private OrderItemsMapper orderItemsMapper;
+
     @Autowired
     private OrdersMapper ordersMapper;
+
     @Autowired
     private OrderStatusMapper orderStatusMapper;
+
+    @Autowired
+    private ItemsSpecService itemsSpecService;
+
 
     @Override
     public void createOrder(SubmitOrderBO submitOrderBO) {
@@ -74,13 +85,13 @@ public class OrderServiceImpl implements OrderService {
         newOrder.setUpdatedTime(new Date());
 
         // 2. 循环根据itemSpecIds保存订单商品信息表
-        String itemSpecIdArr[] = itemSpecIds.split(",");
+        String[] itemSpecIdArr = itemSpecIds.split(",");
         // 商品原价累计
         Integer totalAmount = 0;
         // 优惠后的实际支付价格累计
         Integer realPayAmount = 0;
 
-
+        // 一个订单下，多个商品操作
         for (String itemSpecId : itemSpecIdArr) {
             // TODO: 整合 redis后，商品购买的数量重新从 redis 的购物车中获取
             int buyCounts =1 ;
@@ -111,7 +122,7 @@ public class OrderServiceImpl implements OrderService {
             orderItemsMapper.insertOrderItem(subOrderItem);
 
             // 2.4 在用户提价订单以后，规格表中需要扣除库存
-
+            itemsSpecService.decreaseItemSpecStock(itemSpecId, buyCounts);
         }
 
         // 设置总价格
