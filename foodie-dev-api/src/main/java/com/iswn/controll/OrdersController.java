@@ -3,9 +3,11 @@ package com.iswn.controll;
 import com.iswn.bo.SubmitOrderBO;
 import com.iswn.enums.PayMethodEnum;
 import com.iswn.exception.http.RequestBadException;
+import com.iswn.service.OrderService;
 import com.iswn.utils.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/orders")
 public class OrdersController {
     final static Logger logger = LoggerFactory.getLogger(OrdersController.class);
+
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 创建订单
@@ -29,6 +34,7 @@ public class OrdersController {
         }
 
         // 1. 创建订单
+        orderService.createOrder(submitOrderBO);
         // 2. 创建订单以后，移除购物车中已结算(已提交)的商品
         // 3. 向支付中心发送当前订单，用于保存支付中心的订单数据
         return JsonResult.success();
