@@ -34,8 +34,8 @@ public class UserController {
         return result ? JsonResult.success() : JsonResult.failure(233, "用户名存在");
     }
 
-    @PostMapping("/api/regist")
-    public JsonResult regist(@RequestBody UserBO userBO) {
+    @PostMapping("/api/register")
+    public JsonResult register(@RequestBody UserBO userBO) {
         String pwd = userBO.getPassword();
         String username = userBO.getUsername();
         String confirmPwd = userBO.getConfirmPassword();
