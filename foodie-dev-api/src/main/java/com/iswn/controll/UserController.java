@@ -73,7 +73,7 @@ public class UserController {
     public JsonResult login(@RequestBody UserBO userBO,
                             HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
-        if (StringUtils.isAnyBlank(userBO.getUsername(), userBO.getUsername())) {
+        if (StringUtils.isAnyBlank(userBO.getUsername(), userBO.getPassword())) {
             throw new LoginBadException("用户名和密码不能为空");
         }
 
