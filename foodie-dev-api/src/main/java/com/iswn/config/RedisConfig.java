@@ -1,4 +1,4 @@
-package com.iswn.cache;
+package com.iswn.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

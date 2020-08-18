@@ -105,11 +105,21 @@
             <artifactId>commons-pool2</artifactId>
             <version>2.5.0</version>
         </dependency>
-        <!-- jackson json 优化缓存对象序列化 -->
+        <!-- jackson json 优化缓存对象序列化, jackson-databind 依赖【jackson-core、jackson-annotations】这2个包，不添加会报异常 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.10.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.10.2</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.10.1</version>
+            <version>2.10.2</version>
         </dependency>
         <!-- lombok set/get 方法生成 -->
         <dependency>
