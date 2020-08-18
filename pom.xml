@@ -105,6 +105,12 @@
             <artifactId>commons-pool2</artifactId>
             <version>2.5.0</version>
         </dependency>
+        <!-- jackson json 优化缓存对象序列化 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.1</version>
+        </dependency>
         <!-- lombok set/get 方法生成 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
