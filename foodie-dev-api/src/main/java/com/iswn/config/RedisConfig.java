@@ -81,6 +81,11 @@ public class RedisConfig extends CachingConfigurerSupport {
         om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         jackson2JsonRedisSerializer.setObjectMapper(om);
         template.setValueSerializer(jackson2JsonRedisSerializer);
+
+        /**
+         * 必须执行这个函数,初始化RedisTemplate，不然会报以下错误
+         * template not initialized; call afterPropertiesSet() before using it
+         */
         template.afterPropertiesSet();
         // StringRedisTemplate 是 RedisTempLate<String, String> 的子类
         return template;
