@@ -19,6 +19,8 @@ public class RedisUtils {
     }
     /**
      * Redis 模板
+     *
+     * redisTemplate 不能通过new获取，需要从 spring 容器中得到，这里是通过 static 静态代码块初始化
      */
     private static RedisTemplate<String, Object> redisTemplate;
     static {
