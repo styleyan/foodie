@@ -5,9 +5,7 @@ import com.iswn.exception.http.LoginBadException;
 import com.iswn.exception.http.RequestBadException;
 import com.iswn.pojo.Users;
 import com.iswn.service.UsersService;
-import com.iswn.utils.CookieUtils;
-import com.iswn.utils.JsonResult;
-import com.iswn.utils.JsonUtils;
+import com.iswn.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +22,7 @@ public class UserController {
     @Autowired
     private UsersService usersService;
 
-    @GetMapping("/api/userNameIsExist")
+    @GetMapping("/api/user/userNameIsExist")
     public JsonResult userNameIsExist(@RequestParam("userName") String userName) {
         if (StringUtils.isBlank(userName)) {
             throw new RequestBadException("sdfsfd");
@@ -34,7 +32,7 @@ public class UserController {
         return result ? JsonResult.success() : JsonResult.failure(233, "用户名存在");
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/api/user/register")
     public JsonResult register(@RequestBody UserBO userBO) {
         String pwd = userBO.getPassword();
         String username = userBO.getUsername();
@@ -69,7 +67,7 @@ public class UserController {
      * 登录
      * @return
      */
-    @PostMapping("/api/login")
+    @PostMapping("/api/user/login")
     public JsonResult login(@RequestBody UserBO userBO,
                             HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
@@ -79,10 +77,29 @@ public class UserController {
 
         // 1. 实现登录
         Users users = usersService.queryUserForLogin(userBO);
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
+        String md5String = MD5Utils.getMD5Str(users.getUsername());
 
-        // TODO: 生成用户 token，存入 redis 会话
-        // TODO: 同步购物车数据
+        RedisUtils.setValueTimeout(md5String, users, 60*60*24*360);
+        response.setHeader("token", md5String);
+        return JsonResult.success(users);
+    }
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    @PostMapping("/api/user/info")
+    public JsonResult userInfo(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String token = httpServletRequest.getHeader("token");
+        if (StringUtils.isBlank(token)) {
+            throw new LoginBadException("token 不能为空");
+        }
+
+        Users users = (Users)RedisUtils.getValue(token);
+
+        if (users == null) {
+            return JsonResult.failure(10001, "用户不存在");
+        }
 
         return JsonResult.success(users);
     }
@@ -91,7 +108,7 @@ public class UserController {
      * 用户退出
      * @return
      */
-    @PostMapping("/api/logout")
+    @PostMapping("/api/user/logout")
     public JsonResult logout(@RequestParam(required = false) String userId, HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.deleteCookie(request,response, "user");
         return JsonResult.success();

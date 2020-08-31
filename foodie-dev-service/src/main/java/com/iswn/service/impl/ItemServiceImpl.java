@@ -10,6 +10,7 @@ import com.iswn.pojo.ItemsSpec;
 import com.iswn.service.ItemService;
 import com.iswn.utils.DesensitizationUtil;
 import com.iswn.utils.PagedGridResult;
+import com.iswn.utils.RedisUtils;
 import com.iswn.vo.CommentLevelCountsVO;
 import com.iswn.vo.ItemCommentVO;
 import com.iswn.vo.SearchItemsVO;
@@ -40,7 +41,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Items queryItemById(String itemId) {
-        return itemsMapper.getItemById(itemId);
+        Items items = (Items)RedisUtils.getValue("item-info:" + itemId);
+        if (items == null) {
+            items = itemsMapper.getItemById(itemId);
+            RedisUtils.setValueTimeout("item-info:" + itemId, items, 1000);
+        }
+
+        return items;
     }
 
     @Override

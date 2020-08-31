@@ -3,11 +3,13 @@ package com.iswn.pojo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Setter
 @Getter
+@ToString
 public class Users {
     /**
      * 主键id 用户id
