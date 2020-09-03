@@ -1,11 +1,16 @@
 package com.iswn.aspect;
 
+import com.iswn.pojo.Users;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 @Aspect
@@ -43,6 +48,25 @@ public class ServiceLogAspect {
         } else {
             logger.info("=========== 执行结束 ========, 耗时: {} 毫秒========", diff);
         }
+
+        return result;
+    }
+
+    /**
+     * 在 Aop 中获取请求头信息
+     * 关键代码是:
+     * ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+     * HttpServletRequest request = attributes.getRequest();
+     */
+    @Around("execution(* com.iswn.controll..*.*(..))")
+    public Object red(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        ServletRequestAttributes attributes = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+
+        Users users = (Users)request.getAttribute("user");
+
+        logger.info("around: info={}", users);
+        Object result = proceedingJoinPoint.proceed();
 
         return result;
     }

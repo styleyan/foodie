@@ -43,7 +43,6 @@ public class AddressController {
             throw new RequestBadException("用户id不能为空");
         }
         List<UserAddress> adds = addressService.queryAddressByUserId(userId);
-
         return JsonResult.success(adds);
     }
 

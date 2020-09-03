@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -68,20 +70,21 @@ public class UserController {
      * @return
      */
     @PostMapping("/api/user/login")
-    public JsonResult login(@RequestBody UserBO userBO,
-                            HttpServletRequest request,
-                            HttpServletResponse response) throws Exception {
+    public JsonResult login(@RequestBody UserBO userBO) throws Exception {
         if (StringUtils.isAnyBlank(userBO.getUsername(), userBO.getPassword())) {
             throw new LoginBadException("用户名和密码不能为空");
         }
 
-        // 1. 实现登录
+        // 登录查询
         Users users = usersService.queryUserForLogin(userBO);
         String md5String = MD5Utils.getMD5Str(users.getUsername());
-
         RedisUtils.setValueTimeout(md5String, users, 60*60*24*360);
-        response.setHeader("token", md5String);
-        return JsonResult.success(users);
+
+        Map map = new HashMap(2);
+        map.put("user", users);
+        map.put("token", md5String);
+
+        return JsonResult.success(map);
     }
 
     /**
@@ -90,17 +93,11 @@ public class UserController {
      */
     @PostMapping("/api/user/info")
     public JsonResult userInfo(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        String token = httpServletRequest.getHeader("token");
-        if (StringUtils.isBlank(token)) {
-            throw new LoginBadException("token 不能为空");
-        }
-
-        Users users = (Users)RedisUtils.getValue(token);
+        Users users = (Users)httpServletRequest.getAttribute("user");
 
         if (users == null) {
-            return JsonResult.failure(10001, "用户不存在");
+            return JsonResult.failure(1001, "用户未登录");
         }
-
         return JsonResult.success(users);
     }
 
@@ -109,8 +106,8 @@ public class UserController {
      * @return
      */
     @PostMapping("/api/user/logout")
-    public JsonResult logout(@RequestParam(required = false) String userId, HttpServletRequest request, HttpServletResponse response) {
-        CookieUtils.deleteCookie(request,response, "user");
+    public JsonResult logout( HttpServletRequest request) {
+        RedisUtils.delKey(request.getHeader("token"));
         return JsonResult.success();
     }
 }

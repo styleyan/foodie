@@ -2,6 +2,7 @@ package com.iswn.controll;
 
 import com.iswn.bo.ShopcartBO;
 import com.iswn.exception.http.RequestBadException;
+import com.iswn.pojo.Users;
 import com.iswn.service.UsersService;
 import com.iswn.utils.BeanUtils;
 import com.iswn.utils.JsonResult;
@@ -43,6 +44,11 @@ public class ShopCartController {
         return JsonResult.success();
     }
 
+    /**
+     * 根据用户ID，查询购物车列表
+     * @param userId
+     * @return
+     */
     @GetMapping("/query")
     public JsonResult query(@RequestParam("userId") String userId) {
         if (StringUtils.isAnyBlank(userId)) {
@@ -53,6 +59,22 @@ public class ShopCartController {
 
 
         return JsonResult.success(prefix);
+    }
+
+    /**
+     * 根据用户ID，合并购物车
+     * @return
+     */
+    @PostMapping("/merge")
+    public JsonResult mergeCart(@RequestBody Map map, HttpServletRequest request) {
+        Users users = (Users)request.getAttribute("user");
+
+        if (users == null) {
+            return JsonResult.failure(1003, "用户不存在");
+        }
+
+        logger.info("info", map);
+        return JsonResult.success();
     }
 
 
