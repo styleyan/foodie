@@ -1,6 +1,7 @@
 package com.iswn.controll;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.iswn.bo.ShopCartListBO;
 import com.iswn.enums.ErrorCodeEnum;
 import com.iswn.exception.http.RequestBadException;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,19 +29,31 @@ public class ShopCartController {
     private static String SHOP_CARD_PREV = "shop_card:user_id_";
     /**
      * 添加商品到购物车，同步给后端存储
-     * @param shopcartListBO
+     * @param shopCart
      * @return
      */
     @PostMapping("/add")
-    public JsonResult add(@RequestBody ShopCartListBO shopcartListBO, HttpServletRequest request) {
+    public JsonResult add(@RequestBody ShopCart shopCart, HttpServletRequest request) {
         Users users = (Users)request.getAttribute("user");
         if (users == null) {
             throw new RequestBadException("用户不能为空");
         }
-        logger.error(JSON.toJSONString(shopcartListBO));
-        ShopCart shopCart = shopcartListBO.getList().get(0);
 
-        RedisUtils.hashPut("shop_card:" + users.getId(), shopCart.getItemId(), JSON.toJSONString(shopCart));
+        if (shopCart.getItemId() == null) {
+            throw new RequestBadException("商品不能为空");
+        }
+        String key = "shop_card:" + users.getId() + ":";
+        String hkey = shopCart.getItemId();
+
+        String redisShopCart = (String)RedisUtils.hashGet(key, hkey);
+
+
+        if (redisShopCart != null) {
+            ShopCart sc = JSONObject.parseObject(redisShopCart, ShopCart.class);
+            shopCart.setBuyCounts(sc.getBuyCounts() + shopCart.getBuyCounts());
+        }
+
+        RedisUtils.hashPut("shop_card:" + users.getId() + ":", shopCart.getItemId(), JSON.toJSONString(shopCart));
         return JsonResult.success();
     }
 
@@ -65,14 +79,19 @@ public class ShopCartController {
      * @return
      */
     @PostMapping("/merge")
-    public JsonResult mergeCart(@RequestBody Map map, HttpServletRequest request) {
+    public JsonResult mergeCart(@RequestBody ShopCartListBO shopcartListBO, HttpServletRequest request) {
         Users users = (Users)request.getAttribute("user");
+        String userId = users.getId();
 
         if (users == null) {
-            return JsonResult.failure(ErrorCodeEnum.BAD_NOT_LOGIN.getCode(), ErrorCodeEnum.BAD_NOT_LOGIN.getMessage());
+            throw new RequestBadException("用户不能为空");
+        }
+        List<ShopCart> shopCartList = shopcartListBO.getList();
+
+        for (ShopCart shopCart : shopCartList) {
+            RedisUtils.hashPut("shop_card:" + userId + ":", shopCart.getItemId(), JSON.toJSONString(shopCart));
         }
 
-        logger.info("info", map);
         return JsonResult.success();
     }
 

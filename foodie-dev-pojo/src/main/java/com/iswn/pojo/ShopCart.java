@@ -34,7 +34,7 @@ public class ShopCart {
     /**
      * 购买数量
      */
-    private String buyCounts;
+    private int buyCounts;
     /**
      * 优惠价
      */
