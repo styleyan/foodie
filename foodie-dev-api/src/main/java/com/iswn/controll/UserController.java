@@ -1,6 +1,7 @@
 package com.iswn.controll;
 
 import com.iswn.bo.UserBO;
+import com.iswn.enums.ErrorCodeEnum;
 import com.iswn.exception.http.LoginBadException;
 import com.iswn.exception.http.RequestBadException;
 import com.iswn.pojo.Users;
@@ -91,12 +92,12 @@ public class UserController {
      * 获取用户信息
      * @return
      */
-    @PostMapping("/api/user/info")
-    public JsonResult userInfo(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+    @GetMapping("/api/user/info")
+    public JsonResult userInfo(HttpServletRequest httpServletRequest) {
         Users users = (Users)httpServletRequest.getAttribute("user");
 
         if (users == null) {
-            return JsonResult.failure(1001, "用户未登录");
+            return JsonResult.failure(ErrorCodeEnum.BAD_NOT_LOGIN.getCode(), ErrorCodeEnum.BAD_NOT_LOGIN.getMessage());
         }
         return JsonResult.success(users);
     }

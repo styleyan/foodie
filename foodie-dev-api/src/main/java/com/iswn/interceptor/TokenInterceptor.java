@@ -33,7 +33,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         response.setCharacterEncoding("utf-8");
 
         // 从 header 中获取 token值
-        String token = request.getHeader("accessToken");
+        String token = request.getHeader("X-Requested-Token");
 
         // 如果没有token, 未登录状态直接放行
         if(StringUtils.isBlank(token)) {

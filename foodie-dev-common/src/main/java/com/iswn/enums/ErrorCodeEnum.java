@@ -9,7 +9,8 @@ import lombok.Getter;
 @Getter
 public enum ErrorCodeEnum {
     BAD_REQUEST(2003, "参数错误"),
-    BAD_LOGIN(2004, "登录异常");
+    BAD_LOGIN(2004, "登录异常"),
+    BAD_NOT_LOGIN(2005, "用户暂未登录");
     private int code;
     private String message;
 

@@ -1,23 +1,20 @@
 package com.iswn.controll;
 
-import com.iswn.bo.ShopcartBO;
+import com.alibaba.fastjson.JSON;
+import com.iswn.bo.ShopCartListBO;
+import com.iswn.enums.ErrorCodeEnum;
 import com.iswn.exception.http.RequestBadException;
+import com.iswn.pojo.ShopCart;
 import com.iswn.pojo.Users;
-import com.iswn.service.UsersService;
-import com.iswn.utils.BeanUtils;
 import com.iswn.utils.JsonResult;
 import com.iswn.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Y.jer
@@ -30,17 +27,19 @@ public class ShopCartController {
     private static String SHOP_CARD_PREV = "shop_card:user_id_";
     /**
      * 添加商品到购物车，同步给后端存储
-     * @param userId
-     * @param shopcartBO
+     * @param shopcartListBO
      * @return
      */
     @PostMapping("/add")
-    public JsonResult add(@RequestParam("userId") String userId, @RequestBody ShopcartBO shopcartBO) {
-        if (StringUtils.isBlank(userId)) {
-            throw new RequestBadException("用户id不能为空");
+    public JsonResult add(@RequestBody ShopCartListBO shopcartListBO, HttpServletRequest request) {
+        Users users = (Users)request.getAttribute("user");
+        if (users == null) {
+            throw new RequestBadException("用户不能为空");
         }
-        Map map = BeanUtils.beanToMap(shopcartBO);
-        RedisUtils.hashPutAll(SHOP_CARD_PREV + userId +":" + shopcartBO.getSpecId(), map);
+        logger.error(JSON.toJSONString(shopcartListBO));
+        ShopCart shopCart = shopcartListBO.getList().get(0);
+
+        RedisUtils.hashPut("shop_card:" + users.getId(), shopCart.getItemId(), JSON.toJSONString(shopCart));
         return JsonResult.success();
     }
 
@@ -70,7 +69,7 @@ public class ShopCartController {
         Users users = (Users)request.getAttribute("user");
 
         if (users == null) {
-            return JsonResult.failure(1003, "用户不存在");
+            return JsonResult.failure(ErrorCodeEnum.BAD_NOT_LOGIN.getCode(), ErrorCodeEnum.BAD_NOT_LOGIN.getMessage());
         }
 
         logger.info("info", map);

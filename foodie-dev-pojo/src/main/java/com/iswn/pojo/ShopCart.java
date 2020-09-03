@@ -1,4 +1,4 @@
-package com.iswn.bo;
+package com.iswn.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ShopcartBO {
+public class ShopCart {
     /**
      * 商品id
      */
