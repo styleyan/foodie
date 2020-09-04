@@ -62,7 +62,7 @@ public class ShopCartController {
      * @return
      */
     @PostMapping("/merge")
-    public JsonResult mergeCart(@RequestBody Map map, HttpServletRequest request) {
+    public JsonResult mergeCart(@RequestBody Map<Object, ShopCart> map, HttpServletRequest request) {
         Users users = (Users)request.getAttribute("user");
         String userId = users.getId();
 
@@ -70,9 +70,11 @@ public class ShopCartController {
             throw new RequestBadException("用户不能为空");
         }
         for (Object key : map.keySet()) {
-            System.out.println(key);
-            ShopCart shopCart = JSONObject.parseObject(JSONObject.toJSONString(map.get(key)), ShopCart.class);
-
+            /**
+             * 刚开始第一次居然用这么复杂的方式接收复杂对象
+             * ShopCart shopCart = JSONObject.parseObject(JSONObject.toJSONString(map.get(key)), ShopCart.class);
+             */
+            ShopCart shopCart = map.get(key);
             String redisKey = "shop_card:" + userId + ":";
             String hkey = shopCart.getItemId();
 

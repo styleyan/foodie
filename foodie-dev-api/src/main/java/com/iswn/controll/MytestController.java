@@ -3,6 +3,7 @@ package com.iswn.controll;
 import com.iswn.utils.RedisUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,14 +39,24 @@ public class MytestController {
 
     @PostMapping("/api/redis/setset")
     public String setSet(@RequestBody Map map) {
-//        RedisUtils.listPush((String)map.get("key"), map.get("map"));
+        RedisUtils.listPush((String)map.get("key"), map.get("map"));
         return "ok";
     }
 
     @PostMapping("/api/redis/setzset")
     public String setZset(@RequestBody Map map) {
-//        RedisUtils.listPush((String)map.get("key"), map.get("map"));
+        RedisUtils.listPush((String)map.get("key"), map.get("map"));
 
+        return "ok";
+    }
+
+    @PostMapping("/api/redis/sethash11")
+    public String sethash11(@RequestBody List<String> list) {
+        System.out.println(list);
+
+        list.forEach((val) -> {
+            System.out.println(val);
+        });
         return "ok";
     }
 }
