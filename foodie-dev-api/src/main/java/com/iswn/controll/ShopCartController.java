@@ -54,24 +54,7 @@ public class ShopCartController {
         }
 
         RedisUtils.hashPut("shop_card:" + users.getId() + ":", shopCart.getItemId(), JSON.toJSONString(shopCart));
-        return JsonResult.success();
-    }
-
-    /**
-     * 根据用户ID，查询购物车列表
-     * @param userId
-     * @return
-     */
-    @GetMapping("/query")
-    public JsonResult query(@RequestParam("userId") String userId) {
-        if (StringUtils.isAnyBlank(userId)) {
-            throw new RequestBadException("用户id 不能为空");
-        }
-
-        String prefix = SHOP_CARD_PREV + userId + ":*";
-
-
-        return JsonResult.success(prefix);
+        return JsonResult.success(true);
     }
 
     /**
@@ -79,22 +62,57 @@ public class ShopCartController {
      * @return
      */
     @PostMapping("/merge")
-    public JsonResult mergeCart(@RequestBody ShopCartListBO shopcartListBO, HttpServletRequest request) {
+    public JsonResult mergeCart(@RequestBody Map map, HttpServletRequest request) {
         Users users = (Users)request.getAttribute("user");
         String userId = users.getId();
 
         if (users == null) {
             throw new RequestBadException("用户不能为空");
         }
-        List<ShopCart> shopCartList = shopcartListBO.getList();
+        for (Object key : map.keySet()) {
+            System.out.println(key);
+            ShopCart shopCart = JSONObject.parseObject(JSONObject.toJSONString(map.get(key)), ShopCart.class);
 
-        for (ShopCart shopCart : shopCartList) {
-            RedisUtils.hashPut("shop_card:" + userId + ":", shopCart.getItemId(), JSON.toJSONString(shopCart));
+            String redisKey = "shop_card:" + userId + ":";
+            String hkey = shopCart.getItemId();
+
+            /**
+             * 获取redis 存储对象
+             */
+            String redisShopCart = (String)RedisUtils.hashGet(redisKey, hkey);
+
+
+            if (redisShopCart != null) {
+                ShopCart sc = JSONObject.parseObject(redisShopCart, ShopCart.class);
+                shopCart.setBuyCounts(sc.getBuyCounts() + shopCart.getBuyCounts());
+            }
+
+            RedisUtils.hashPut("shop_card:" + users.getId() + ":", shopCart.getItemId(), JSON.toJSONString(shopCart));
         }
 
-        return JsonResult.success();
+        return JsonResult.success(true);
     }
 
+    /**
+     * 根据用户ID，查询购物车列表
+     * @return
+     */
+    @GetMapping("/query")
+    public JsonResult query(HttpServletRequest request) {
+        Users users = (Users)request.getAttribute("user");
+
+        if (users == null) {
+            throw new RequestBadException("用户id 不能为空");
+        }
+
+        Map<Object, Object> cartMap = RedisUtils.hashGetAll("shop_card:" + users.getId() + ":");
+
+        for (Object key : cartMap.keySet()) {
+            ShopCart curShop = JSONObject.parseObject((String)cartMap.get(key), ShopCart.class);
+            cartMap.put(key, curShop);
+        }
+        return JsonResult.success(cartMap);
+    }
 
     /**
      * 购物车中删除商品
