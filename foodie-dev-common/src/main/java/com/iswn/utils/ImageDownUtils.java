@@ -45,7 +45,6 @@ public class ImageDownUtils {
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             is = connection.getInputStream();
 
-            TimeUnit.SECONDS.sleep(3);
             // 创建文件
             File fileOfImg = new File(file + "/" + path + "/" + imageName);
             out = new FileOutputStream(fileOfImg);
