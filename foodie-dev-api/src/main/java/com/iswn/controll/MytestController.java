@@ -1,8 +1,14 @@
 package com.iswn.controll;
 
+import com.iswn.mapper.ItemsImgMapper;
+import com.iswn.pojo.ItemsImg;
+import com.iswn.utils.ImageDownUtils;
+import com.iswn.utils.JsonResult;
 import com.iswn.utils.RedisUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +19,9 @@ import java.util.Map;
  */
 @RestController
 public class MytestController {
+    @Autowired
+    private ItemsImgMapper itemsImgMapper;
+
     @GetMapping("/api/redis/setvalue")
     public String helloSet(@RequestParam String key, @RequestParam String value) {
         RedisUtils.setValue(key, value);
@@ -59,4 +68,23 @@ public class MytestController {
         });
         return "ok";
     }
+
+    @PostMapping("/api/donload/img")
+    public JsonResult domwImage() {
+        List<ItemsImg> itemsImgs = itemsImgMapper.queryAll();
+        List<String> errorList = new ArrayList<>();
+        int downNum = 0;
+
+        for (ItemsImg itemsImg : itemsImgs) {
+            String url = itemsImg.getUrl();
+            Boolean result = ImageDownUtils.start(url);
+            if (!result) {
+                errorList.add(url);
+            }
+            downNum++;
+            System.out.println(downNum);
+        }
+
+        return JsonResult.success(errorList);
+    };
 }

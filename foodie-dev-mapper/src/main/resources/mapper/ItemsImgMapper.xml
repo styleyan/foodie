@@ -8,4 +8,8 @@
     <select id="queryItemMainImgById" parameterType="String" resultType="com.iswn.pojo.ItemsImg">
         SELECT url FROM items_img WHERE item_id = #{itemId} AND is_main = 1;
     </select>
+
+    <select id="queryAll" resultType="com.iswn.pojo.ItemsImg">
+        SELECT * FROM items_img;
+    </select>
 </mapper>

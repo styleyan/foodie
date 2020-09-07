@@ -18,4 +18,9 @@ public interface ItemsImgMapper {
      * 根据商品id 获得商品图片主图url
      */
     ItemsImg queryItemMainImgById(String itemId);
+
+    /**
+     * 获取所有图片
+     */
+    List<ItemsImg> queryAll();
 }
