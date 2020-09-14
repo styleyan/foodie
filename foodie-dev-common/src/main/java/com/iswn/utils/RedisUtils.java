@@ -3,10 +3,7 @@ package com.iswn.utils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -171,7 +168,9 @@ public class RedisUtils {
      * @return Hash对象集合
      */
     public static long hashDeleteKeys(final String key, final Collection<Object> hKeys) {
-        return redisTemplate.opsForHash().delete(key, hKeys);
+        String[] strings = new String[hKeys.size()];
+        hKeys.toArray(strings);
+        return redisTemplate.opsForHash().delete(key, strings);
     }
 
 

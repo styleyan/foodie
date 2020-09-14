@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,11 +40,11 @@ public class ShopCartController {
             throw new RequestBadException("用户不能为空");
         }
 
-        if (shopCart.getItemId() == null) {
+        if (shopCart == null || shopCart.getSpecId() == null) {
             throw new RequestBadException("商品不能为空");
         }
         String key = "shop_card:" + users.getId() + ":";
-        String hkey = shopCart.getItemId();
+        String hkey = shopCart.getSpecId();
 
         String redisShopCart = (String)RedisUtils.hashGet(key, hkey);
 
@@ -53,7 +54,7 @@ public class ShopCartController {
             shopCart.setBuyCounts(sc.getBuyCounts() + shopCart.getBuyCounts());
         }
 
-        RedisUtils.hashPut("shop_card:" + users.getId() + ":", shopCart.getItemId(), JSON.toJSONString(shopCart));
+        RedisUtils.hashPut("shop_card:" + users.getId() + ":", shopCart.getSpecId(), JSON.toJSONString(shopCart));
         return JsonResult.success(true);
     }
 
@@ -76,7 +77,7 @@ public class ShopCartController {
              */
             ShopCart shopCart = map.get(key);
             String redisKey = "shop_card:" + userId + ":";
-            String hkey = shopCart.getItemId();
+            String hkey = shopCart.getSpecId();
 
             /**
              * 获取redis 存储对象
@@ -89,7 +90,7 @@ public class ShopCartController {
                 shopCart.setBuyCounts(sc.getBuyCounts() + shopCart.getBuyCounts());
             }
 
-            RedisUtils.hashPut("shop_card:" + users.getId() + ":", shopCart.getItemId(), JSON.toJSONString(shopCart));
+            RedisUtils.hashPut("shop_card:" + users.getId() + ":", shopCart.getSpecId(), JSON.toJSONString(shopCart));
         }
 
         return JsonResult.success(true);
@@ -118,16 +119,18 @@ public class ShopCartController {
 
     /**
      * 购物车中删除商品
-     * @param userId
-     * @param itemSpecId
+     * @param request
+     * @param itemSpecIds
      * @return
      */
     @PostMapping("/del")
-    public JsonResult del(@RequestParam("userId") String userId,@RequestParam String itemSpecId) {
-        if (StringUtils.isAnyBlank(userId, itemSpecId)) {
-            throw new RequestBadException("比要参数不能为空");
-        }
+    public JsonResult del(HttpServletRequest request, @RequestBody ArrayList<Object> itemSpecIds) {
+        Users users = (Users)request.getAttribute("user");
 
+        if (users == null || itemSpecIds.size() <= 0) {
+            throw new RequestBadException("必要参数不能为空");
+        }
+        RedisUtils.hashDeleteKeys("shop_card:" + users.getId() + ":", itemSpecIds);
         return JsonResult.success();
     }
 }
