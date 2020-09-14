@@ -124,7 +124,7 @@ public class ShopCartController {
      * @return
      */
     @PostMapping("/del")
-    public JsonResult del(HttpServletRequest request, @RequestBody ArrayList<Object> itemSpecIds) {
+    public JsonResult del(HttpServletRequest request, @RequestBody ArrayList<String> itemSpecIds) {
         Users users = (Users)request.getAttribute("user");
 
         if (users == null || itemSpecIds.size() <= 0) {

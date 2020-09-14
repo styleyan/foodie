@@ -167,7 +167,7 @@ public class RedisUtils {
      * @param hKeys Hash键集合
      * @return Hash对象集合
      */
-    public static long hashDeleteKeys(final String key, final Collection<Object> hKeys) {
+    public static long hashDeleteKeys(final String key, final Collection<String> hKeys) {
         String[] strings = new String[hKeys.size()];
         hKeys.toArray(strings);
         return redisTemplate.opsForHash().delete(key, strings);
