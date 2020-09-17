@@ -3,6 +3,7 @@ package com.iswn.controll;
 import com.iswn.bo.AddressBO;
 import com.iswn.exception.http.RequestBadException;
 import com.iswn.pojo.UserAddress;
+import com.iswn.pojo.Users;
 import com.iswn.service.AddressService;
 import com.iswn.utils.JsonResult;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -34,31 +37,32 @@ public class AddressController {
 
     /**
      * 根据用户id 查询收货地址列表
-     * @param userId
      * @return
      */
-    @PostMapping("/list")
-    public JsonResult list(@RequestParam String userId) {
-        if (StringUtils.isBlank(userId)) {
-            throw new RequestBadException("用户id不能为空");
+    @GetMapping("/list")
+    public JsonResult list(HttpServletRequest request) {
+        Users users = (Users)request.getAttribute("user");
+
+        if (users == null) {
+            throw new RequestBadException("用户不能为空");
         }
-        List<UserAddress> adds = addressService.queryAddressByUserId(userId);
+        List<UserAddress> adds = addressService.queryAddressByUserId(users.getId());
         return JsonResult.success(adds);
     }
 
     /**
-     * 根据用户id 查询收货地址列表
+     * 根据用户id 添加收货地址列表
      * @param addressBO
      * @return
      */
     @PostMapping("/add")
-    public JsonResult add(@RequestBody AddressBO addressBO) {
-        if (addressBO == null) {
-            throw new RequestBadException("地址不能为空");
+    public JsonResult add(HttpServletRequest httpServletRequest, @RequestBody AddressBO addressBO) {
+        Users users = (Users)httpServletRequest.getAttribute("user");
+
+        if (users == null) {
+            throw new RequestBadException("用户不能为空");
         }
-        /**
-         * TODO: 缺少判断对参数的校验
-         */
+        addressBO.setUserId(users.getId());
         addressService.addNewUserAddress(addressBO);
 
         return JsonResult.success();
@@ -84,16 +88,16 @@ public class AddressController {
 
     /**
      * 根据用户id 查询收货地址列表
-     * @param userId
      * @param addressId
      * @return
      */
-    @PostMapping("/delete")
-    public JsonResult delete(@RequestParam String userId, @RequestParam String addressId) {
+    @PostMapping("/delete/{addressId}")
+    public JsonResult delete(HttpServletRequest httpServletRequest, @PathVariable("addressId") String addressId) {
         if (StringUtils.isBlank(addressId)) {
             throw new RequestBadException("地址不能为空");
         }
-
+        Users users = (Users)httpServletRequest.getAttribute("user");
+        String userId = users.getId();
         if (StringUtils.isBlank(userId)) {
             throw new RequestBadException("用户id不能为空");
         }
@@ -106,15 +110,16 @@ public class AddressController {
 
     /**
      * 根据用户id 设置默认收货地址
-     * @param userId
      * @param addressId
      * @return
      */
-    @PostMapping("/setDefault")
-    public JsonResult setDefault(@RequestParam String userId, @RequestParam String addressId) {
+    @PostMapping("/setDefault/{addressId}")
+    public JsonResult setDefault(HttpServletRequest httpServletRequest, @PathVariable("addressId") String addressId) {
         if (StringUtils.isBlank(addressId)) {
             throw new RequestBadException("地址不能为空");
         }
+        Users users = (Users)httpServletRequest.getAttribute("user");
+        String userId = users.getId();
 
         if (StringUtils.isBlank(userId)) {
             throw new RequestBadException("用户id不能为空");

@@ -45,8 +45,8 @@ public class AddressServiceImpl implements AddressService {
         BeanUtils.copyProperties(addressBO, newAddress);
 
         // 用户id
-        String userId = Sid.nextShort();
-        newAddress.setId(userId);
+        String id = Sid.nextShort();
+        newAddress.setId(id);
         newAddress.setIsDefault(isDefault);
         newAddress.setUpdatedTime(new Date());
         newAddress.setCreatedTime(new Date());

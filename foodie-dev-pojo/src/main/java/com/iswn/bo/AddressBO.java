@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddressBO {
+    private String id;
     private String addressId;
     private String userId;
     private String receiver;
